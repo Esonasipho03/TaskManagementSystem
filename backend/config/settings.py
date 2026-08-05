@@ -28,7 +28,12 @@ SECRET_KEY = os.environ.get(
 
 DEBUG = os.environ.get("DEBUG", "False") == "True"
 
-ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split(",")
+import os
+
+ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
+
+if "RENDER_EXTERNAL_HOSTNAME" in os.environ:
+    ALLOWED_HOSTS.append(os.environ["RENDER_EXTERNAL_HOSTNAME"])
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
