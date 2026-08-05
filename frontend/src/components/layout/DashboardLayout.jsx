@@ -1,38 +1,28 @@
 import Sidebar from "./Sidebar";
 import TopNavbar from "./TopNavbar";
 
-export default function DashboardLayout({children}){
+import "../../styles/dashboard.css";
 
-return(
+export default function DashboardLayout({ children }) {
 
-<div>
+    return (
 
-<Sidebar/>
+        <div className="dashboard-shell">
 
-<div
-style={{
-marginLeft:"260px",
-background:"#F4F6FA",
-minHeight:"100vh"
-}}
->
+            <Sidebar />
 
-<TopNavbar/>
+            <div className="dashboard-main">
 
-<div
-style={{
-padding:"30px"
-}}
->
+                <TopNavbar />
 
-{children}
+                <div className="dashboard-content">
+                    {children}
+                </div>
 
-</div>
+            </div>
 
-</div>
+        </div>
 
-</div>
-
-)
+    );
 
 }

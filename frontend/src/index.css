@@ -1,15 +1,26 @@
 :root {
-  --text: #6b6375;
-  --text-h: #08060d;
+  --text: #6b6355;
+  --text-h: #0d0a08;
+  --text-muted: #6c757d;
   --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
+  --border: #e7e2db;
+  --code-bg: #f4efe6;
+  --accent: #e2672e;
+  --accent-2: #f5a623;
+  --accent-gradient: linear-gradient(135deg, #e2672e, #f5a623);
+  --accent-bg: rgba(226, 103, 46, 0.1);
+  --accent-border: rgba(226, 103, 46, 0.5);
+  --social-bg: rgba(244, 239, 230, 0.5);
   --shadow:
     rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+
+  /* App surfaces: page background, card background, and subtle fills
+     (search boxes, calendar cells, etc.) - kept as their own variables
+     so every surface flips together when the theme toggles. */
+  --surface-alt: #faf6f1;
+  --surface: #ffffff;
+  --surface-muted: #f7f2ec;
+  --icon-color: #5a5248;
 
   --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
   --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
@@ -30,24 +41,51 @@
   }
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
-  }
+:root[data-theme="dark"] {
+  --text: #b3ab9e;
+  --text-h: #f6f2ec;
+  --text-muted: #9b9284;
+  --bg: #1a1714;
+  --border: #35302a;
+  --code-bg: #221e19;
+  --accent: #f0824a;
+  --accent-2: #f7bb4b;
+  --accent-gradient: linear-gradient(135deg, #f0824a, #f7bb4b);
+  --accent-bg: rgba(240, 130, 74, 0.15);
+  --accent-border: rgba(240, 130, 74, 0.5);
+  --social-bg: rgba(53, 48, 42, 0.5);
+  --shadow:
+    rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
 
-  #social .button-icon {
-    filter: invert(1) brightness(2);
-  }
+  --surface-alt: #17140f;
+  --surface: #221e19;
+  --surface-muted: #2a251e;
+  --icon-color: #c9c2b4;
+}
+
+:root[data-theme="dark"] #social .button-icon {
+  filter: invert(1) brightness(2);
+}
+
+/* Smooth, eased transition on theme toggle. Applied to the elements that
+   actually carry theme colors, rather than a blanket `*` selector, to
+   keep the rest of the app's interaction transitions untouched. */
+body,
+.dashboard-main,
+.top-navbar,
+.sidebar,
+.section-card,
+.stat-card,
+.team-card,
+.calendar-cell,
+.calendar-nav-btn,
+.search-box,
+.search-results,
+.notif-panel,
+.user-panel,
+.dashboard-welcome,
+.theme-toggle-btn {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
 body {
@@ -55,11 +93,7 @@ body {
 }
 
 #root {
-  width: 1126px;
-  max-width: 100%;
-  margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
+  width: 100%;
   min-height: 100svh;
   display: flex;
   flex-direction: column;

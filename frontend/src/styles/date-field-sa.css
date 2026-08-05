@@ -1,0 +1,49 @@
+.date-field-sa{
+    position: relative;
+    width: 100%;
+    margin-bottom: 1rem;
+    cursor: pointer;
+}
+
+.date-field-sa.disabled{
+    cursor: default;
+}
+
+/* The real input stays interactive (so click-to-open, keyboard entry
+   and native form validation all keep working) but its own rendered
+   text is hidden - it sits transparently on top of our display div. */
+.date-field-sa-native{
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    border: none;
+    opacity: 0;
+    z-index: 2;
+    cursor: pointer;
+}
+
+.date-field-sa-native:disabled{
+    cursor: default;
+}
+
+.date-field-sa-display{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    pointer-events: none;
+}
+
+.date-field-sa-placeholder{
+    color: #9A8C7F;
+}
+
+.date-field-sa-icon{
+    color: #9A8C7F;
+    font-size: 14px;
+    margin-left: 8px;
+    flex-shrink: 0;
+}

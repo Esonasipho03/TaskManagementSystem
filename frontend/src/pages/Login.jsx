@@ -1,111 +1,173 @@
+import { useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
+
+import { AuthContext } from "../context/AuthContext";
+
 import "./../styles/login.css";
+import logo from "../assets/logo.png";
 
-import hero from "../assets/hero.png";
+export default function Login() {
 
-import { FaTasks } from "react-icons/fa";
+    const navigate = useNavigate();
 
-export default function Login(){
+    const { login } = useContext(AuthContext);
 
-return(
+    const [username, setUsername] = useState("");
 
-<div className="login-page">
+    const [password, setPassword] = useState("");
 
-<div className="login-card row g-0">
+    const [showPassword, setShowPassword] = useState(false);
 
-<div className="col-lg-6 left-side">
+    const [rememberMe, setRememberMe] = useState(true);
 
-<h1 className="fw-bold">
+    const [error, setError] = useState("");
 
-<FaTasks/>
+    async function handleSubmit(e) {
 
- Task Management
+        e.preventDefault();
 
-</h1>
+        setError("");
 
-<p className="mt-4">
+        try {
 
-Manage projects.
+            const user = await login(username, password);
 
-Track developer progress.
+            if (user.role === "MANAGER") {
 
-Assign tasks.
+                navigate("/dashboard");
 
-Monitor productivity.
+            } else {
 
-All in one place.
+                navigate("/dashboard");
 
-</p>
+            }
 
-<img
+        } catch (err) {
 
-src={hero}
+            setError("Invalid username or password.");
 
-className="img-fluid feature"
+        }
 
-alt=""
+    }
 
- />
+    return (
 
-</div>
+        <div className="login-page auth-page">
 
-<div className="col-lg-6 right-side">
+            <div className="auth-card">
 
-<h2 className="fw-bold">
+                <img src={logo} alt="Nokamabovu Credit Solutions" className="auth-logo" />
 
-Welcome Back
+                <h2 className="auth-title">Welcome Back</h2>
 
-</h2>
+                <p className="auth-subtitle">
+                    Sign in to your account to continue
+                </p>
 
-<p className="text-muted">
+                <form onSubmit={handleSubmit} className="mt-4">
 
-Sign in to continue
+                    <label className="auth-label" htmlFor="username">
+                        Username
+                    </label>
 
-</p>
+                    <div className="auth-input-group">
 
-<div className="mt-4">
+                        <i className="bi bi-person auth-input-icon" />
 
-<input
+                        <input
+                            id="username"
+                            className="form-control auth-input"
+                            placeholder="Enter your username"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                        />
 
-className="form-control mb-3"
+                    </div>
 
-placeholder="Username"
+                    <label className="auth-label" htmlFor="password">
+                        Password
+                    </label>
 
-/>
+                    <div className="auth-input-group">
 
-<input
+                        <i className="bi bi-lock auth-input-icon" />
 
-type="password"
+                        <input
+                            id="password"
+                            type={showPassword ? "text" : "password"}
+                            className="form-control auth-input auth-input-has-toggle"
+                            placeholder="Enter your password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                        />
 
-className="form-control mb-4"
+                        <button
+                            type="button"
+                            className="auth-input-toggle"
+                            onClick={() => setShowPassword((v) => !v)}
+                            aria-label={showPassword ? "Hide password" : "Show password"}
+                        >
+                            <i className={showPassword ? "bi bi-eye-slash" : "bi bi-eye"} />
+                        </button>
 
-placeholder="Password"
+                    </div>
 
-/>
+                    {error && (
 
-<button className="btn btn-primary btn-login w-100">
+                        <div className="alert alert-danger">
 
-Login
+                            {error}
 
-</button>
+                        </div>
 
-</div>
+                    )}
 
-<div className="text-center mt-5">
+                    <div className="auth-row">
 
-<small>
+                        <label className="auth-remember">
+                            <input
+                                type="checkbox"
+                                checked={rememberMe}
+                                onChange={(e) => setRememberMe(e.target.checked)}
+                            />
+                            Remember me
+                        </label>
 
-© 2026 Task Management System
+                        <a
+                            href="#"
+                            className="auth-forgot-link"
+                            onClick={(e) => e.preventDefault()}
+                        >
+                            Forgot Password?
+                        </a>
 
-</small>
+                    </div>
 
-</div>
+                    <button
+                        type="submit"
+                        className="btn btn-primary btn-login w-100"
+                    >
 
-</div>
+                        Sign In
 
-</div>
+                    </button>
 
-</div>
+                </form>
 
-)
+                <div className="text-center mt-4">
+
+                    <small>
+
+                        © 2026 Task Management System
+
+                    </small>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    );
 
 }

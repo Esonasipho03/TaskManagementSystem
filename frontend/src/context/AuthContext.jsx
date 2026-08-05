@@ -49,6 +49,8 @@ export default function AuthProvider({ children }) {
         const me = await api.get("accounts/me/");
 
         setUser(me.data);
+
+        return me.data; 
     }
 
     function logout() {
@@ -63,6 +65,7 @@ export default function AuthProvider({ children }) {
         <AuthContext.Provider
             value={{
                 user,
+                setUser,
                 login,
                 logout,
                 loading,

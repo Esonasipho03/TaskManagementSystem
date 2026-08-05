@@ -1,97 +1,288 @@
+import { useContext, useEffect, useMemo, useState } from "react";
+import {
+    Chart as ChartJS,
+    ArcElement,
+    BarElement,
+    CategoryScale,
+    LinearScale,
+    Tooltip,
+    Legend,
+} from "chart.js";
+import { Doughnut, Bar } from "react-chartjs-2";
+
 import DashboardLayout from "../components/layout/DashboardLayout";
 import StatCard from "../components/dashboard/StatCard";
+import ProjectCard from "../components/dashboard/ProjectCard";
+
+import { AuthContext } from "../context/AuthContext";
+import { getTasks } from "../api/tasks";
+import { getProjects } from "../api/projects";
 
 import {
-
-FaProjectDiagram,
-FaTasks,
-FaCheckCircle,
-FaClock
-
+    FaProjectDiagram,
+    FaTasks,
+    FaCheckCircle,
+    FaClock,
 } from "react-icons/fa";
 
-export default function Dashboard(){
+ChartJS.register(ArcElement, BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
-return(
+const STATUS_LABELS = {
+    TODO: "To Do",
+    IN_PROGRESS: "In Progress",
+    REVIEW: "Review",
+    DONE: "Done",
+};
 
-<DashboardLayout>
+const STATUS_COLORS = {
+    TODO: "#98A2B3",
+    IN_PROGRESS: "#E2672E",
+    REVIEW: "#FFA500",
+    DONE: "#198754",
+};
 
-<h2 className="mb-4">
+const PRIORITY_COLORS = {
+    LOW: "#20C997",
+    MEDIUM: "#F5A623",
+    HIGH: "#FD7E14",
+    CRITICAL: "#DC3545",
+};
 
-Welcome back, Faith 👋
+export default function Dashboard() {
 
-</h2>
+    const { user } = useContext(AuthContext);
 
-<div className="row g-4">
+    const [tasks, setTasks] = useState([]);
+    const [projects, setProjects] = useState([]);
+    const [loading, setLoading] = useState(true);
 
-<div className="col-lg-3">
+    useEffect(() => {
+        load();
+    }, []);
 
-<StatCard
+    async function load() {
 
-title="Projects"
+        try {
 
-value="8"
+            const [taskData, projectData] = await Promise.all([
+                getTasks(),
+                getProjects(),
+            ]);
 
-color="#0D6EFD"
+            setTasks(taskData);
+            setProjects(projectData);
 
-icon={<FaProjectDiagram/>}
+        } catch (err) {
+            console.error(err);
+        } finally {
+            setLoading(false);
+        }
 
-/>
+    }
 
-</div>
+    const completedCount = useMemo(
+        () => tasks.filter((t) => t.status === "DONE").length,
+        [tasks]
+    );
 
-<div className="col-lg-3">
+    const overdueCount = useMemo(() => {
 
-<StatCard
+        const today = new Date().toISOString().slice(0, 10);
+        return tasks.filter((t) => t.status !== "DONE" && t.due_date && t.due_date < today).length;
 
-title="Tasks"
+    }, [tasks]);
 
-value="63"
+    const statusCounts = useMemo(() => {
 
-color="#20C997"
+        const counts = { TODO: 0, IN_PROGRESS: 0, REVIEW: 0, DONE: 0 };
 
-icon={<FaTasks/>}
+        tasks.forEach((t) => {
+            if (counts[t.status] !== undefined) counts[t.status] += 1;
+        });
 
-/>
+        return counts;
 
-</div>
+    }, [tasks]);
 
-<div className="col-lg-3">
+    const priorityCounts = useMemo(() => {
 
-<StatCard
+        const counts = { LOW: 0, MEDIUM: 0, HIGH: 0, CRITICAL: 0 };
 
-title="Completed"
+        tasks.forEach((t) => {
+            if (counts[t.priority] !== undefined) counts[t.priority] += 1;
+        });
 
-value="52"
+        return counts;
 
-color="#198754"
+    }, [tasks]);
 
-icon={<FaCheckCircle/>}
+    const doughnutData = {
+        labels: Object.keys(statusCounts).map((k) => STATUS_LABELS[k]),
+        datasets: [{
+            data: Object.values(statusCounts),
+            backgroundColor: Object.keys(statusCounts).map((k) => STATUS_COLORS[k]),
+            borderWidth: 0,
+        }],
+    };
 
-/>
+    const barData = {
+        labels: Object.keys(priorityCounts).map(
+            (k) => k.charAt(0) + k.slice(1).toLowerCase()
+        ),
+        datasets: [{
+            label: "Tasks",
+            data: Object.values(priorityCounts),
+            backgroundColor: Object.keys(priorityCounts).map((k) => PRIORITY_COLORS[k]),
+            borderRadius: 8,
+        }],
+    };
 
-</div>
+    const barOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+            y: { beginAtZero: true, ticks: { precision: 0 } },
+        },
+    };
 
-<div className="col-lg-3">
+    const doughnutOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { position: "bottom" } },
+    };
 
-<StatCard
+    function progressFor(project) {
 
-title="Overdue"
+        const projectTasks = tasks.filter((t) => t.project === project.id);
 
-value="4"
+        if (projectTasks.length === 0) return 0;
 
-color="#DC3545"
+        const done = projectTasks.filter((t) => t.status === "DONE").length;
 
-icon={<FaClock/>}
+        return Math.round((done / projectTasks.length) * 100);
 
-/>
+    }
 
-</div>
+    const displayName = user?.first_name || user?.username || "there";
 
-</div>
+    // Everyone can browse every project on the Projects page now, but this
+    // widget stays personal - a manager's own oversight, a developer's own
+    // memberships.
+    const myProjects = user?.role === "MANAGER"
+        ? projects
+        : projects.filter((p) => p.members.includes(user?.id));
 
-</DashboardLayout>
+    return (
 
-)
+        <DashboardLayout>
+
+            <h2 className="mb-4 dashboard-welcome">
+                Welcome back, {displayName} 👋
+            </h2>
+
+            {loading ? (
+
+                <p className="text-muted">Loading your dashboard...</p>
+
+            ) : (
+
+                <>
+
+                    <div className="row g-4 mb-4">
+
+                        <div className="col-lg-3 col-sm-6">
+                            <StatCard
+                                title="Projects"
+                                value={myProjects.length}
+                                color="#E2672E"
+                                icon={<FaProjectDiagram />}
+                            />
+                        </div>
+
+                        <div className="col-lg-3 col-sm-6">
+                            <StatCard
+                                title="Tasks"
+                                value={tasks.length}
+                                color="#20C997"
+                                icon={<FaTasks />}
+                            />
+                        </div>
+
+                        <div className="col-lg-3 col-sm-6">
+                            <StatCard
+                                title="Completed"
+                                value={completedCount}
+                                color="#198754"
+                                icon={<FaCheckCircle />}
+                            />
+                        </div>
+
+                        <div className="col-lg-3 col-sm-6">
+                            <StatCard
+                                title="Overdue"
+                                value={overdueCount}
+                                color="#DC3545"
+                                icon={<FaClock />}
+                            />
+                        </div>
+
+                    </div>
+
+                    <div className="reports-grid mb-4">
+
+                        <div className="section-card">
+                            <div className="chart-card-title">Tasks by status</div>
+                            <div className="chart-card-body">
+                                {tasks.length === 0 ? (
+                                    <p className="text-muted">No tasks yet.</p>
+                                ) : (
+                                    <Doughnut data={doughnutData} options={doughnutOptions} />
+                                )}
+                            </div>
+                        </div>
+
+                        <div className="section-card">
+                            <div className="chart-card-title">Tasks by priority</div>
+                            <div className="chart-card-body">
+                                {tasks.length === 0 ? (
+                                    <p className="text-muted">No tasks yet.</p>
+                                ) : (
+                                    <Bar data={barData} options={barOptions} />
+                                )}
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <h5 className="fw-bold mb-3">Your projects</h5>
+
+                    <div className="row g-4">
+
+                        {myProjects.slice(0, 6).map((project) => (
+                            <div className="col-lg-4" key={project.id}>
+                                <ProjectCard
+                                    title={project.name}
+                                    description={project.description}
+                                    progress={progressFor(project)}
+                                    status={project.status}
+                                    members={project.members.length}
+                                />
+                            </div>
+                        ))}
+
+                        {myProjects.length === 0 && (
+                            <p className="text-muted">No projects yet.</p>
+                        )}
+
+                    </div>
+
+                </>
+
+            )}
+
+        </DashboardLayout>
+
+    );
 
 }
