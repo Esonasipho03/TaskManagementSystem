@@ -1,0 +1,78 @@
+/* ---------- Brand theme overrides (orange -> gold) ---------- */
+/* Recolors Bootstrap's "primary" everywhere it's used across the app */
+
+:root {
+    --brand-accent: #E2672E;
+    --brand-accent-dark: #C64F1D;
+    --brand-accent-2: #F5A623;
+    --brand-gradient: linear-gradient(135deg, #E2672E, #F5A623);
+    --brand-charcoal: #3E3E3E;
+
+    --bs-primary: #E2672E;
+    --bs-primary-rgb: 226, 103, 46;
+    --bs-link-color: #E2672E;
+    --bs-link-color-rgb: 226, 103, 46;
+    --bs-link-hover-color: #C64F1D;
+    --bs-link-hover-color-rgb: 198, 79, 29;
+}
+
+.btn-primary {
+    --bs-btn-bg: #E2672E;
+    --bs-btn-border-color: #E2672E;
+    --bs-btn-hover-bg: #C64F1D;
+    --bs-btn-hover-border-color: #B8471A;
+    --bs-btn-active-bg: #B8471A;
+    --bs-btn-active-border-color: #A83F17;
+    --bs-btn-disabled-bg: #E2672E;
+    --bs-btn-disabled-border-color: #E2672E;
+    --bs-btn-focus-shadow-rgb: 226, 103, 46;
+}
+
+.btn-outline-primary {
+    --bs-btn-color: #E2672E;
+    --bs-btn-border-color: #E2672E;
+    --bs-btn-hover-bg: #E2672E;
+    --bs-btn-hover-border-color: #E2672E;
+    --bs-btn-active-bg: #E2672E;
+    --bs-btn-active-border-color: #E2672E;
+    --bs-btn-disabled-color: #E2672E;
+    --bs-btn-disabled-border-color: #E2672E;
+    --bs-btn-focus-shadow-rgb: 226, 103, 46;
+}
+
+.bg-primary {
+    background-color: #E2672E !important;
+    background-image: none !important;
+}
+
+.text-primary {
+    color: #E2672E !important;
+}
+
+.border-primary {
+    border-color: #E2672E !important;
+}
+
+.badge.bg-primary {
+    background-color: #E2672E !important;
+}
+
+.alert-primary {
+    --bs-alert-color: #8A3D1B;
+    --bs-alert-bg: #FBEBE1;
+    --bs-alert-border-color: #F3CDB3;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: #F0A87C;
+    box-shadow: 0 0 0 0.25rem rgba(226, 103, 46, 0.2);
+}
+
+a {
+    color: var(--bs-link-color);
+}
+
+a:hover {
+    color: var(--bs-link-hover-color);
+}
