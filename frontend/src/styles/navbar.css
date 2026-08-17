@@ -356,7 +356,7 @@ color:var(--icon-color);
 }
 
 .user-panel-logout:hover{
-    background:#FDEBEC;
+    background:rgba(220,53,69,0.12);
 }
 
 @media (max-width: 576px){

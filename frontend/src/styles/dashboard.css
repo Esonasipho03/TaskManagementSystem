@@ -243,20 +243,20 @@
 }
 
 .calendar-cell.today {
-    background: #FFF1E1;
-    border: 1px solid #E2672E;
+    background: var(--accent-bg);
+    border: 1px solid var(--accent-border);
 }
 
 .calendar-cell.has-project {
-    background: #FDEBEC;
+    background: var(--tint-danger);
 }
 
 .calendar-cell.has-task {
-    background: #FFF6E5;
+    background: var(--tint-warning);
 }
 
 .calendar-cell.has-project.has-task {
-    background: linear-gradient(135deg, #FDEBEC 50%, #FFF6E5 50%);
+    background: linear-gradient(135deg, var(--tint-danger) 50%, var(--tint-warning) 50%);
 }
 
 .calendar-date {
@@ -304,7 +304,7 @@
     justify-content: space-between;
     align-items: center;
     padding: 12px 0;
-    border-bottom: 1px solid #F0F1F4;
+    border-bottom: 1px solid var(--border);
 }
 
 .agenda-item:last-child {

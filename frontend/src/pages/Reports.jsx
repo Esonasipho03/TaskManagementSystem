@@ -102,44 +102,6 @@ function reopenCount(task) {
 
 }
 
-// Average time (in days) spent per visit to each status, aggregated across
-// every task's history. Ongoing stays are measured up to "now". This is
-// what actually shows where work is getting stuck (e.g. sitting in REVIEW)
-// rather than just how fast any one developer types.
-function computeStatusDurations(tasks) {
-
-    const totals = {};
-    const now = new Date();
-
-    tasks.forEach((t) => {
-
-        const history = [...(t.status_history || [])].sort(
-            (a, b) => new Date(a.changed_at) - new Date(b.changed_at)
-        );
-
-        history.forEach((h, i) => {
-
-            const start = new Date(h.changed_at);
-            const end = i + 1 < history.length ? new Date(history[i + 1].changed_at) : now;
-            const status = h.to_status;
-
-            if (!totals[status]) totals[status] = { sumDays: 0, count: 0 };
-
-            totals[status].sumDays += Math.max(0, (end - start) / MS_PER_DAY);
-            totals[status].count += 1;
-
-        });
-
-    });
-
-    return Object.entries(totals).map(([status, { sumDays, count }]) => ({
-        status,
-        avgDays: count ? sumDays / count : null,
-        visits: count,
-    }));
-
-}
-
 function csvEscape(value) {
 
     if (value === null || value === undefined) return "";
@@ -370,14 +332,6 @@ export default function Reports() {
 
     }, [isManager, users, projects, tasks]);
 
-    const statusDurations = useMemo(() => {
-
-        if (!isManager) return [];
-
-        return computeStatusDurations(tasks).sort((a, b) => b.avgDays - a.avgDays);
-
-    }, [isManager, tasks]);
-
     const sortedDeveloperStats = useMemo(() => {
 
         const sorted = [...developerStats].sort((a, b) => {
@@ -525,17 +479,6 @@ export default function Reports() {
             });
 
             rows.push("");
-
-            rows.push(toCsvRow(["Time in status"]));
-            rows.push(toCsvRow(["Status", "Avg. time per visit (days)", "Visits"]));
-
-            statusDurations.forEach((s) => {
-                rows.push(toCsvRow([
-                    STATUS_LABELS[s.status] || s.status,
-                    s.avgDays === null ? "" : s.avgDays.toFixed(1),
-                    s.visits,
-                ]));
-            });
 
         }
 
@@ -950,62 +893,6 @@ export default function Reports() {
                                 belongs to, its status, when it's due, when it was actually
                                 completed, and that project's overall due date - click a column
                                 header to sort.
-                            </p>
-
-                        </div>
-
-                    )}
-
-                    {isManager && (
-
-                        <div className="section-card mt-4">
-
-                            <div className="chart-card-title">Time in status</div>
-
-                            {statusDurations.length === 0 ? (
-
-                                <p className="text-muted mb-0">No status history to report on yet.</p>
-
-                            ) : (
-
-                                <div className="table-responsive">
-
-                                    <table className="table align-middle">
-
-                                        <thead>
-                                            <tr>
-                                                <th>Status</th>
-                                                <th>Avg. time per visit</th>
-                                                <th>Visits</th>
-                                            </tr>
-                                        </thead>
-
-                                        <tbody>
-
-                                            {statusDurations.map((s) => (
-
-                                                <tr key={s.status}>
-                                                    <td>{STATUS_LABELS[s.status] || s.status}</td>
-                                                    <td>{s.avgDays === null ? "—" : `${s.avgDays.toFixed(1)}d`}</td>
-                                                    <td>{s.visits}</td>
-                                                </tr>
-
-                                            ))}
-
-                                        </tbody>
-
-                                    </table>
-
-                                </div>
-
-                            )}
-
-                            <p className="text-muted mb-0 mt-3" style={{ fontSize: 13 }}>
-                                Average time tasks spend per visit to each status, across the
-                                whole team (ongoing stays are counted up to now). This is usually
-                                the fastest way to spot a process bottleneck - e.g. tasks that
-                                move quickly while "In Progress" but sit for days in "Review" -
-                                which a per-developer speed number can't show.
                             </p>
 
                         </div>

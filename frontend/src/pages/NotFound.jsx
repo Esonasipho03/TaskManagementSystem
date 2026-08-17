@@ -7,12 +7,12 @@ export default function NotFound() {
 
         <div
             className="d-flex flex-column align-items-center justify-content-center text-center"
-            style={{ minHeight: "100vh", background: "#FBF3EA" }}
+            style={{ minHeight: "100vh", background: "var(--bg)", color: "var(--text)" }}
         >
 
             <FaExclamationTriangle size={54} className="text-warning mb-3" />
 
-            <h1 className="fw-bold">404</h1>
+            <h1 className="fw-bold" style={{ color: "var(--text-h)" }}>404</h1>
 
             <p className="text-muted mb-4">
 
