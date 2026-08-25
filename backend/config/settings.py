@@ -66,8 +66,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    
-      "rest_framework",
+
+    "rest_framework",
     "corsheaders",
 
     "accounts",
@@ -80,9 +80,9 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
-    
+
     'django.middleware.security.SecurityMiddleware',
-     "whitenoise.middleware.WhiteNoiseMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -126,7 +126,9 @@ DATABASES = {
         ),
         'PORT': os.environ.get('DB_PORT', '5432'),
         'OPTIONS': {
-            'options': '-c search_path=tms,public'
+            # No 'public' fallback: prevents TMS migrations from ever
+            # touching tables in other apps' schemas on the shared DB.
+            'options': '-c search_path=tms'
         },
     }
 }
