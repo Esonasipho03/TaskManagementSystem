@@ -12,9 +12,14 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 
 from pathlib import Path
 import os
-from pathlib import Path
+from dotenv import load_dotenv
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Load variables from a local .env file (if present) into the environment.
+# In production (e.g. Render), env vars are set directly, so this is a no-op.
+load_dotenv(BASE_DIR / '.env')
 
 
 # Quick-start development settings - unsuitable for production
@@ -28,14 +33,10 @@ SECRET_KEY = os.environ.get(
 
 DEBUG = os.environ.get("DEBUG", "False") == "True"
 
-import os
-
 ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
 
 if "RENDER_EXTERNAL_HOSTNAME" in os.environ:
     ALLOWED_HOSTS.append(os.environ["RENDER_EXTERNAL_HOSTNAME"])
-
-import os
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
@@ -115,8 +116,18 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get('DB_NAME', 'helpdesk_ezr7'),
+        'USER': os.environ.get('DB_USER', 'helpdesk_ezr7_user'),
+        'PASSWORD': os.environ.get('DB_PASSWORD'),
+        'HOST': os.environ.get(
+            'DB_HOST',
+            'dpg-d9cakju1a83c73c4im7g-a.oregon-postgres.render.com'
+        ),
+        'PORT': os.environ.get('DB_PORT', '5432'),
+        'OPTIONS': {
+            'options': '-c search_path=tms,public'
+        },
     }
 }
 
