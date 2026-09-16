@@ -51,6 +51,47 @@ const PRIORITY_COLORS = {
     CRITICAL: "#DC3545",
 };
 
+const PRIORITY_LABELS = {
+    LOW: "Low",
+    MEDIUM: "Medium",
+    HIGH: "High",
+    CRITICAL: "Critical",
+};
+
+// Draws the task total in the empty center of the status donut, reading
+// the app's current theme colors so it stays legible in dark mode too.
+const centerTextPlugin = {
+    id: "centerText",
+    beforeDraw(chart) {
+
+        const { ctx, chartArea } = chart;
+        if (!chartArea) return;
+
+        const styles = getComputedStyle(document.documentElement);
+        const textColor = styles.getPropertyValue("--text-h").trim() || "#0d0a08";
+        const mutedColor = styles.getPropertyValue("--text-muted").trim() || "#6c757d";
+
+        const total = chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+        const centerX = (chartArea.left + chartArea.right) / 2;
+        const centerY = (chartArea.top + chartArea.bottom) / 2;
+
+        ctx.save();
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+
+        ctx.font = "700 24px system-ui, sans-serif";
+        ctx.fillStyle = textColor;
+        ctx.fillText(total, centerX, centerY - 9);
+
+        ctx.font = "700 10px system-ui, sans-serif";
+        ctx.fillStyle = mutedColor;
+        ctx.fillText("TASKS", centerX, centerY + 12);
+
+        ctx.restore();
+
+    },
+};
+
 const MS_PER_DAY = 1000 * 60 * 60 * 24;
 
 function formatDate(value) {
@@ -492,34 +533,58 @@ export default function Reports() {
             data: Object.values(statusCounts),
             backgroundColor: Object.keys(statusCounts).map((k) => STATUS_COLORS[k]),
             borderWidth: 0,
+            hoverOffset: 6,
         }],
     };
 
     const barData = {
-        labels: Object.keys(priorityCounts).map(
-            (k) => k.charAt(0) + k.slice(1).toLowerCase()
-        ),
+        labels: Object.keys(priorityCounts).map((k) => PRIORITY_LABELS[k]),
         datasets: [{
             label: "Tasks",
             data: Object.values(priorityCounts),
             backgroundColor: Object.keys(priorityCounts).map((k) => PRIORITY_COLORS[k]),
             borderRadius: 8,
+            maxBarThickness: 38,
         }],
     };
 
     const barOptions = {
         responsive: true,
         maintainAspectRatio: false,
-        plugins: { legend: { display: false } },
+        plugins: {
+            legend: { display: false },
+            tooltip: {
+                backgroundColor: "#221E19",
+                padding: 10,
+                cornerRadius: 8,
+                displayColors: false,
+            },
+        },
         scales: {
-            y: { beginAtZero: true, ticks: { precision: 0 } },
+            x: {
+                grid: { display: false },
+                ticks: { color: "#98A2B3", font: { size: 12 } },
+            },
+            y: {
+                beginAtZero: true,
+                ticks: { precision: 0, color: "#98A2B3", font: { size: 12 } },
+                grid: { color: "rgba(0,0,0,0.06)" },
+            },
         },
     };
 
     const doughnutOptions = {
         responsive: true,
         maintainAspectRatio: false,
-        plugins: { legend: { position: "bottom" } },
+        cutout: "74%",
+        plugins: {
+            legend: { display: false },
+            tooltip: {
+                backgroundColor: "#221E19",
+                padding: 10,
+                cornerRadius: 8,
+            },
+        },
     };
 
     const completedCount = statusCounts.DONE;
@@ -601,25 +666,72 @@ export default function Reports() {
                         <div className="reports-grid">
 
                             <div className="section-card">
-                                <div className="chart-card-title">Tasks by status</div>
-                                <div className="chart-card-body">
-                                    {tasks.length === 0 ? (
-                                        <p className="text-muted">No tasks yet.</p>
-                                    ) : (
-                                        <Doughnut data={doughnutData} options={doughnutOptions} />
-                                    )}
+
+                                <div className="chart-card-head">
+                                    <div className="chart-card-title">Tasks by status</div>
+                                    <div className="chart-card-total">{tasks.length} total</div>
                                 </div>
+
+                                {tasks.length === 0 ? (
+                                    <p className="text-muted">No tasks yet.</p>
+                                ) : (
+                                    <div className="chart-card-body chart-card-body--split">
+
+                                        <div className="chart-canvas-wrap">
+                                            <Doughnut
+                                                data={doughnutData}
+                                                options={doughnutOptions}
+                                                plugins={[centerTextPlugin]}
+                                            />
+                                        </div>
+
+                                        <ul className="chart-legend">
+                                            {Object.keys(statusCounts).map((k) => (
+                                                <li className="chart-legend-item" key={k}>
+                                                    <span
+                                                        className="legend-dot"
+                                                        style={{ background: STATUS_COLORS[k] }}
+                                                    />
+                                                    <span className="legend-label">{STATUS_LABELS[k]}</span>
+                                                    <span className="legend-value">{statusCounts[k]}</span>
+                                                </li>
+                                            ))}
+                                        </ul>
+
+                                    </div>
+                                )}
+
                             </div>
 
                             <div className="section-card">
-                                <div className="chart-card-title">Tasks by priority</div>
-                                <div className="chart-card-body">
-                                    {tasks.length === 0 ? (
-                                        <p className="text-muted">No tasks yet.</p>
-                                    ) : (
-                                        <Bar data={barData} options={barOptions} />
-                                    )}
+
+                                <div className="chart-card-head">
+                                    <div className="chart-card-title">Tasks by priority</div>
+                                    <div className="chart-card-total">{tasks.length} total</div>
                                 </div>
+
+                                {tasks.length === 0 ? (
+                                    <p className="text-muted">No tasks yet.</p>
+                                ) : (
+                                    <>
+                                        <ul className="chart-legend chart-legend--row">
+                                            {Object.keys(priorityCounts).map((k) => (
+                                                <li className="chart-legend-item" key={k}>
+                                                    <span
+                                                        className="legend-dot"
+                                                        style={{ background: PRIORITY_COLORS[k] }}
+                                                    />
+                                                    <span className="legend-label">{PRIORITY_LABELS[k]}</span>
+                                                </li>
+                                            ))}
+                                        </ul>
+
+                                        <div className="chart-card-body">
+                                            <Bar data={barData} options={barOptions} />
+                                        </div>
+                                    </>
+                                )}
+
                             </div>
 
                         </div>

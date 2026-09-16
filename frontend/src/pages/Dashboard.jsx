@@ -401,16 +401,15 @@ export default function Dashboard() {
 
                     <h5 className="fw-bold mb-3">Your projects</h5>
 
-                    <div className="row g-4">
+                    <div className="row g-3">
 
-                        {myProjects.slice(0, 6).map((project) => (
-                            <div className="col-lg-4" key={project.id}>
+                        {myProjects.slice(0, 8).map((project) => (
+                            <div className="col-xl-3 col-lg-4 col-sm-6" key={project.id}>
                                 <ProjectCard
                                     title={project.name}
-                                    description={project.description}
                                     progress={progressFor(project)}
                                     status={project.status}
-                                    members={project.members.length}
+                                    compact
                                 />
                             </div>
                         ))}

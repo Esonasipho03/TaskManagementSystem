@@ -75,12 +75,43 @@ border-color:var(--accent-border);
 transform:translateY(-2px);
 
 }
+
 .project-card-clickable{
+
 cursor:pointer;
+
 transition:transform .15s ease, border-color .15s ease;
+
 }
 
 .project-card-clickable:hover{
+
 transform:translateY(-2px);
+
 border-color:var(--accent-border) !important;
+
+}
+
+.project-card-compact .card-body{
+
+padding:16px 18px;
+
+}
+
+.project-card-name{
+
+font-size:15px;
+
+white-space:nowrap;
+
+overflow:hidden;
+
+text-overflow:ellipsis;
+
+}
+
+.project-card-compact .progress{
+
+height:6px;
+
 }

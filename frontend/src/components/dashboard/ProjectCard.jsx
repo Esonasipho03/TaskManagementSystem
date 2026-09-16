@@ -21,10 +21,11 @@ export default function ProjectCard({
     canEditStatus = false,
     onStatusChange,
     onClick,
+    compact = false,
 }) {
     return (
         <div
-            className={`card border rounded-4 h-100${onClick ? " project-card-clickable" : ""}`}
+            className={`card border rounded-4 h-100${onClick ? " project-card-clickable" : ""}${compact ? " project-card-compact" : ""}`}
             onClick={onClick}
             role={onClick ? "button" : undefined}
             tabIndex={onClick ? 0 : undefined}
@@ -37,13 +38,15 @@ export default function ProjectCard({
         >
             <div className="card-body">
 
-                <h5 className="fw-bold">{title}</h5>
+                <h5 className="fw-bold project-card-name">{title}</h5>
 
-                <p className="text-muted">
-                    {description}
-                </p>
+                {!compact && (
+                    <p className="text-muted">
+                        {description}
+                    </p>
+                )}
 
-                <div className="mb-3">
+                <div className={compact ? "mb-2" : "mb-3"}>
 
                     <div className="d-flex justify-content-between">
 
@@ -85,7 +88,7 @@ export default function ProjectCard({
                         </span>
                     )}
 
-                    <small>{members} Members</small>
+                    {!compact && <small>{members} Members</small>}
 
                 </div>
 

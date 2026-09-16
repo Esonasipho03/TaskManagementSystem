@@ -97,10 +97,30 @@
     --bs-alert-border-color: #F3CDB3;
 }
 
+.form-control,
+.form-select {
+    border-radius: 10px;
+    border-color: var(--border);
+    font-size: 14px;
+    padding: 8px 14px;
+}
+
+.form-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+}
+
 .form-control:focus,
 .form-select:focus {
     border-color: #F0A87C;
-    box-shadow: 0 0 0 0.25rem rgba(226, 103, 46, 0.2);
+    box-shadow: 0 0 0 0.2rem rgba(226, 103, 46, 0.15);
+}
+
+.modal-content {
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    box-shadow: 0 20px 45px rgba(0, 0, 0, .12);
 }
 
 a {
