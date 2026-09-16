@@ -34,7 +34,9 @@ font-size:20px;
 
 font-weight:bold;
 
-border-bottom:1px solid rgba(255,255,255,.1);
+letter-spacing:.02em;
+
+border-bottom:1px solid rgba(255,255,255,.08);
 
 display:flex;
 
@@ -78,9 +80,13 @@ align-items:center;
 
 gap:15px;
 
-padding:14px 30px;
+margin:2px 14px;
 
-color:rgba(255,255,255,.75);
+padding:12px 16px;
+
+border-radius:10px;
+
+color:rgba(255,255,255,.68);
 
 text-decoration:none;
 
@@ -88,7 +94,7 @@ transition:.2s;
 
 white-space:nowrap;
 
-border-left:3px solid transparent;
+font-size:14.5px;
 
 }
 
@@ -96,25 +102,33 @@ border-left:3px solid transparent;
 
 flex-shrink:0;
 
-font-size:16px;
+font-size:15px;
+
+opacity:.85;
 
 }
 
 .menu-item:hover{
 
-background:#3A312A;
+background:rgba(255,255,255,.06);
 
 color:white;
 
 }
 
+/* Quiet tinted pill instead of a solid block - reads as "selected",
+   not as a button. */
 .menu-item.active{
 
-background:#E2672E;
+background:rgba(226,103,46,.16);
 
-color:white;
+color:#F5C283;
 
-border-left-color:#F9C77E;
+}
+
+.menu-item.active svg{
+
+opacity:1;
 
 }
 

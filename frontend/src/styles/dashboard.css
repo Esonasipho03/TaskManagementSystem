@@ -60,9 +60,10 @@
 
 .section-card {
     background: var(--surface);
-    border-radius: 18px;
-    padding: 25px;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, .06);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 24px;
+    box-shadow: none;
 }
 
 /* ---------- Team page ---------- */
@@ -75,15 +76,17 @@
 
 .team-card {
     background: var(--surface);
-    border-radius: 18px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
     padding: 22px;
     text-align: center;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, .06);
-    transition: .25s;
+    box-shadow: none;
+    transition: border-color .2s, transform .2s;
 }
 
 .team-card:hover {
-    transform: translateY(-4px);
+    border-color: var(--accent-border);
+    transform: translateY(-2px);
 }
 
 .team-avatar {
@@ -122,8 +125,12 @@
 }
 
 .chart-card-title {
-    font-weight: 600;
-    margin-bottom: 16px;
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 18px;
 }
 
 .dashboard-welcome {

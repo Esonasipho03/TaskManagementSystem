@@ -24,7 +24,7 @@ export default function ProjectCard({
 }) {
     return (
         <div
-            className={`card shadow-sm border-0 rounded-4 h-100${onClick ? " project-card-clickable" : ""}`}
+            className={`card border rounded-4 h-100${onClick ? " project-card-clickable" : ""}`}
             onClick={onClick}
             role={onClick ? "button" : undefined}
             tabIndex={onClick ? 0 : undefined}

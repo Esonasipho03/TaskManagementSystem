@@ -53,8 +53,42 @@
     border-color: #E2672E !important;
 }
 
+/* ---------- Status pills ---------- */
+/* Tinted pills instead of solid fills - quieter, more like a tag than
+   a button, matching the reference's "OPERATIONS" badge treatment. */
+
+.badge {
+    font-weight: 600;
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 5px 10px;
+    border-radius: 999px;
+}
+
 .badge.bg-primary {
-    background-color: #E2672E !important;
+    background-color: var(--accent-bg) !important;
+    color: var(--accent) !important;
+}
+
+.badge.bg-success {
+    background-color: rgba(25, 135, 84, 0.14) !important;
+    color: #2f9e63 !important;
+}
+
+.badge.bg-warning {
+    background-color: rgba(255, 193, 7, 0.16) !important;
+    color: #a66a00 !important;
+}
+
+.badge.bg-danger {
+    background-color: rgba(220, 53, 69, 0.14) !important;
+    color: #dc3545 !important;
+}
+
+.badge.bg-secondary {
+    background-color: var(--surface-muted) !important;
+    color: var(--text-muted) !important;
 }
 
 .alert-primary {

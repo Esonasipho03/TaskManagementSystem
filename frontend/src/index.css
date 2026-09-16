@@ -47,25 +47,27 @@
 }
 
 :root[data-theme="dark"] {
-  --text: #b3ab9e;
-  --text-h: #f6f2ec;
-  --text-muted: #9b9284;
-  --bg: #1a1714;
-  --border: #35302a;
-  --code-bg: #221e19;
+  --text: #b7b0a2;
+  --text-h: #f5f1ea;
+  --text-muted: #948c7c;
+  --bg: #100f0d;
+  --border: #2b2620;
+  --code-bg: #1c1812;
   --accent: #f0824a;
   --accent-2: #f7bb4b;
   --accent-gradient: linear-gradient(135deg, #f0824a, #f7bb4b);
-  --accent-bg: rgba(240, 130, 74, 0.15);
-  --accent-border: rgba(240, 130, 74, 0.5);
-  --social-bg: rgba(53, 48, 42, 0.5);
+  --accent-bg: rgba(240, 130, 74, 0.14);
+  --accent-border: rgba(240, 130, 74, 0.45);
+  --social-bg: rgba(43, 38, 32, 0.5);
   --shadow:
-    rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
+    rgba(0, 0, 0, 0.5) 0 10px 15px -3px, rgba(0, 0, 0, 0.3) 0 4px 6px -2px;
 
-  --surface-alt: #17140f;
-  --surface: #221e19;
-  --surface-muted: #2a251e;
-  --icon-color: #c9c2b4;
+  /* Flatter, near-black surfaces with a hairline border doing the
+     separation work that a heavier box-shadow used to do. */
+  --surface-alt: #0c0b09;
+  --surface: #17140f;
+  --surface-muted: #1f1a14;
+  --icon-color: #c7c0b1;
 
   --tint-danger: rgba(220, 53, 69, 0.16);
   --tint-warning: rgba(255, 193, 7, 0.16);
@@ -172,6 +174,17 @@ h2 {
 }
 p {
   margin: 0;
+}
+
+/* Small uppercase label for section eyebrows / tags, in the spirit of
+   the "OPERATIONS" pill style - available to any page that wants it. */
+.eyebrow {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
 }
 
 code,

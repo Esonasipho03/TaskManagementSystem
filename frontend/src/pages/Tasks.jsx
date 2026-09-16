@@ -273,7 +273,7 @@ export default function Tasks() {
 
             </div>
 
-            <div className="card shadow-sm border-0">
+            <div className="card border">
 
                 <div className="table-responsive">
 
