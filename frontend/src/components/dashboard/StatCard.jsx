@@ -33,9 +33,10 @@ return(
 </div>
 
 <div
+className="stat-icon-chip"
 style={{
 color:color,
-fontSize:40
+background:`${color}1A`,
 }}
 >
 

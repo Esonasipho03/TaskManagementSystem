@@ -166,6 +166,13 @@ export default function Dashboard() {
 
     const displayName = user?.first_name || user?.username || "there";
 
+    const greeting = (() => {
+        const h = new Date().getHours();
+        if (h < 12) return "Good morning";
+        if (h < 18) return "Good afternoon";
+        return "Good evening";
+    })();
+
     // Everyone can browse every project on the Projects page now, but this
     // widget stays personal - a manager's own oversight, a developer's own
     // memberships.
@@ -177,9 +184,29 @@ export default function Dashboard() {
 
         <DashboardLayout>
 
-            <h2 className="mb-4 dashboard-welcome">
-                Welcome back, {displayName} 👋
-            </h2>
+            <div className="dashboard-hero mb-4">
+
+                <div className="dashboard-hero-text">
+                    <span className="eyebrow dashboard-hero-eyebrow">Dashboard</span>
+                    <h2>{greeting}, {displayName} 👋</h2>
+                    <p>Here's what's happening across your projects today.</p>
+                </div>
+
+                <div className="dashboard-hero-stats">
+
+                    <div className="hero-stat-pill">
+                        <span className="hero-stat-value">{myProjects.length}</span>
+                        <span className="hero-stat-label">Projects</span>
+                    </div>
+
+                    <div className="hero-stat-pill">
+                        <span className="hero-stat-value">{completedCount}</span>
+                        <span className="hero-stat-label">Completed</span>
+                    </div>
+
+                </div>
+
+            </div>
 
             {loading ? (
 
