@@ -386,3 +386,64 @@ select.form-control{
         border-radius:22px;
     }
 }
+
+/* ---- Keep me logged in / install as app ---- */
+
+.auth-row-end{
+    justify-content:flex-end;
+    margin-top:-10px;
+}
+
+.auth-remember{
+    line-height:1.35;
+}
+
+.auth-remember input[type="checkbox"]{
+    flex:none;
+}
+
+.install-card{
+    width:100%;
+    margin-top:22px;
+    padding:16px 18px 18px;
+    border-radius:16px;
+    background:#FDF6EF;
+    border:1px solid #F3E4D5;
+}
+
+.install-card-title{
+    font-size:14px;
+    font-weight:700;
+    color:#2B2320;
+    margin:0 0 4px;
+}
+
+.install-card-text{
+    font-size:13px;
+    color:#9A8C7F;
+    margin:0 0 12px;
+}
+
+.install-card-btn{
+    height:44px;
+    border-radius:999px;
+    border:1.5px solid #E2672E;
+    background:#fff;
+    color:#E2672E;
+    font-weight:700;
+    font-size:14px;
+}
+
+.install-card-btn:hover,
+.install-card-btn:focus-visible{
+    background:#E2672E;
+    border-color:#E2672E;
+    color:#fff;
+}
+
+.install-card-hint{
+    font-size:12.5px;
+    color:#6B5B4E;
+    margin:10px 0 0;
+    text-align:center;
+}

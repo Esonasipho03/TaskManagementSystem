@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
+from datetime import timedelta
 from pathlib import Path
 import os
 from dotenv import load_dotenv
@@ -52,6 +53,13 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
+}
+
+SIMPLE_JWT = {
+    # Short-lived access token; the frontend renews it with the refresh token.
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
+    # Upper bound. The login view shortens this unless "Keep me logged in" is ticked.
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=30),
 }
 
 AUTH_USER_MODEL = "accounts.CustomUser"

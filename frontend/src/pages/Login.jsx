@@ -1,7 +1,8 @@
 import { useState, useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 
 import { AuthContext } from "../context/AuthContext";
+import InstallAppCard from "../components/InstallAppCard";
 
 import "./../styles/login.css";
 import logo from "../assets/logo.png";
@@ -10,7 +11,7 @@ export default function Login() {
 
     const navigate = useNavigate();
 
-    const { login } = useContext(AuthContext);
+    const { login, user, loading } = useContext(AuthContext);
 
     const [username, setUsername] = useState("");
 
@@ -18,9 +19,11 @@ export default function Login() {
 
     const [showPassword, setShowPassword] = useState(false);
 
-    const [rememberMe, setRememberMe] = useState(true);
+    const [rememberMe, setRememberMe] = useState(false);
 
     const [error, setError] = useState("");
+
+    const [submitting, setSubmitting] = useState(false);
 
     async function handleSubmit(e) {
 
@@ -28,25 +31,31 @@ export default function Login() {
 
         setError("");
 
+        setSubmitting(true);
+
         try {
 
-            const user = await login(username, password);
+            await login(username, password, rememberMe);
 
-            if (user.role === "MANAGER") {
+            navigate("/dashboard");
 
-                navigate("/dashboard");
-
-            } else {
-
-                navigate("/dashboard");
-
-            }
-
-        } catch (err) {
+        } catch {
 
             setError("Invalid username or password.");
 
+        } finally {
+
+            setSubmitting(false);
+
         }
+
+    }
+
+    // Already signed in on this device (e.g. "Keep me logged in", or opened
+    // from the home screen): skip the form.
+    if (!loading && user) {
+
+        return <Navigate to="/dashboard" replace />;
 
     }
 
@@ -76,6 +85,7 @@ export default function Login() {
 
                         <input
                             id="username"
+                            autoComplete="username"
                             className="form-control auth-input"
                             placeholder="Enter your username"
                             value={username}
@@ -95,6 +105,7 @@ export default function Login() {
                         <input
                             id="password"
                             type={showPassword ? "text" : "password"}
+                            autoComplete="current-password"
                             className="form-control auth-input auth-input-has-toggle"
                             placeholder="Enter your password"
                             value={password}
@@ -130,8 +141,12 @@ export default function Login() {
                                 checked={rememberMe}
                                 onChange={(e) => setRememberMe(e.target.checked)}
                             />
-                            Remember me
+                            Keep me logged in on this device for 30 days
                         </label>
+
+                    </div>
+
+                    <div className="auth-row auth-row-end">
 
                         <a
                             href="#"
@@ -146,13 +161,16 @@ export default function Login() {
                     <button
                         type="submit"
                         className="btn btn-primary btn-login w-100"
+                        disabled={submitting}
                     >
 
-                        Sign In
+                        {submitting ? "Signing in..." : "Sign In"}
 
                     </button>
 
                 </form>
+
+                <InstallAppCard />
 
                 <div className="text-center mt-4">
 

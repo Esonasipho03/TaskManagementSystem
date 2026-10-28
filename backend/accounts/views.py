@@ -1,7 +1,9 @@
 from rest_framework import generics, permissions
 from django.contrib.auth import get_user_model
 
-from .serializers import RegisterSerializer, UserSerializer
+from rest_framework_simplejwt.views import TokenObtainPairView
+
+from .serializers import RegisterSerializer, UserSerializer, RememberMeTokenSerializer
 
 User = get_user_model()
 
@@ -10,6 +12,12 @@ class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = RegisterSerializer
     permission_classes = [permissions.AllowAny]
+
+
+class LoginView(TokenObtainPairView):
+    """Username/password login with an optional 30-day 'remember me'."""
+
+    serializer_class = RememberMeTokenSerializer
 
 
 class MeView(generics.RetrieveUpdateAPIView):
